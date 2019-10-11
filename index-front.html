@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>API Client</title>
+    </head>
+    <body>
+        <input type="button" value="GET ALL" onclick="getAllTasks()">
+        <script>
+            let token = '';
+
+            function getToken() {
+                const url = 'http://localhost:3000/oauth2/token/';
+                const oauthData = {
+                    'username': 'mathieu',
+                    'password': 'codeur',
+                    'scope': 'write',
+                    'client_id': 'mathieu',
+                    'client_secret': 'codeur'
+                };
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(oauthData)
+                };
+                fetch(url, options)
+                    .then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                        else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then(obj => {
+                        token = obj.access_token;
+                        console.log('token : ' + token);
+                        return obj;
+                    })
+                    .catch(error => console.log('erreur fetch : ' + error))
+                    .catch(error => console.log('erreur json : ' + error));
+            }
+            
+            // CREATE
+            function createTask(task) {
+                const url = 'http://localhost:3000/api/v1/tasks';
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(task)
+                };
+                fetch(url, options)
+                    .then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                        else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then(obj => console.log('objet enregistré'))
+                    .catch(error => console.log('erreur fetch : ' + error))
+                    .catch(error => console.log('erreur json : ' + error));
+            }
+            // GET ALL
+            function getAllTasks() {
+                const url = 'http://localhost:3000/api/v1/tasks';
+                const options = {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    }
+                };
+                fetch(url, options)
+                    .then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                        else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then(obj => console.log('objet json : ', obj.tasks))
+                    .catch(error => console.log('erreur fetch : ' + error))
+                    .catch(error => console.log('erreur json : ' + error));
+            }
+
+            // GET ID
+            function getTask(id) {
+                const url = 'http://localhost:3000/api/v1/tasks/' + id;
+                const options = {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                };
+                fetch(url, options)
+                    .then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                        else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then(obj => console.log('objet json : ', obj.task))
+                    .catch(error => console.log('erreur fetch : ' + error))
+                    .catch(error => console.log('erreur json : ' + error));
+            }
+
+            // UPDATE
+            function updateTask(id, task) {
+                const url = 'http://localhost:3000/api/v1/tasks/' + id;
+                const options = {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(task)
+                };
+                fetch(url, options)
+                    .then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                        else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then(obj => console.log('objet modifié'))
+                    .catch(error => console.log('erreur fetch : ' + error))
+                    .catch(error => console.log('erreur json : ' + error));
+            }
+
+            // DELETE
+            function deleteTask(id) {
+                const url = 'http://localhost:3000/api/v1/tasks/' + id;
+                const options = {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                };
+                fetch(url, options)
+                    .then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                        else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then(obj => console.log('objet supprimé'))
+                    .catch(error => console.log('erreur fetch : ' + error))
+                    .catch(error => console.log('erreur json : ' + error));
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+
+                const task = {
+                    title: 'dinner',
+                    description: 'Go for dinner by 7pm'
+                };
+
+                getToken();
+            });
+        </script>
+    </body>
+</html>
