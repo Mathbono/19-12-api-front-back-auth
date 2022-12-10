@@ -8,7 +8,7 @@
     "babel-preset-es2015": "^6.24.1",
     "body-parser": "^1.18.3",
     "btoa": "^1.2.1",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
